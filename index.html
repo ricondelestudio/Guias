@@ -37,6 +37,16 @@
   dialog#ayuda h3{margin:0 0 8px}
   dialog#ayuda ol{padding-left:20px;margin:0 0 14px}
   dialog#ayuda button{width:100%;background:var(--accent);color:#fff;border:0;border-radius:12px;padding:11px;font-weight:800;cursor:pointer}
+  dialog#ayuda button.sec{background:transparent;color:var(--accent);border:2px solid var(--accent);margin-bottom:10px}
+  dialog#ayuda button[hidden]{display:none}
+  dialog#ayuda ol{list-style:none;padding:0;counter-reset:paso}
+  dialog#ayuda ol li{counter-increment:paso;display:flex;align-items:center;gap:10px;margin:0 0 10px;padding:10px 12px;border-radius:12px;background:rgba(127,127,127,.12);line-height:1.35}
+  dialog#ayuda ol li::before{content:counter(paso);flex:none;width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;font-weight:800;display:grid;place-items:center;font-size:14px}
+  dialog#ayuda .ico{display:inline-block;vertical-align:-4px;width:20px;height:20px;color:#007aff}
+  #ayudaFlecha{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);color:#fff;font-weight:800;font-size:15px;text-align:center;text-shadow:0 2px 8px rgba(0,0,0,.6);animation:rebote 1s ease-in-out infinite;pointer-events:none}
+  #ayudaFlecha[hidden]{display:none}
+  #ayudaFlecha span{display:block;font-size:34px;line-height:1}
+  @keyframes rebote{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
   .doodles{position:absolute;right:0;top:0;height:100%;width:min(560px,60%);pointer-events:none}
   .doodles .f{animation:flota 5s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
   .doodles .f2{animation-duration:6.5s;animation-delay:-2s}
@@ -218,7 +228,9 @@
   <h3>📲 Agregar al celular</h3>
   <p id="ayudaTexto"></p>
   <ol id="ayudaPasos"></ol>
+  <button id="ayudaCopiar" class="sec" hidden>📋 Copiar enlace</button>
   <button id="ayudaOk">Entendido</button>
+  <div id="ayudaFlecha" hidden><span>⬇️</span>Compartir</div>
 </dialog>
 <iframe id="impresion" title="Impresión" style="position:fixed;width:0;height:0;border:0;visibility:hidden" aria-hidden="true"></iframe>
 
@@ -385,21 +397,32 @@ document.getElementById("vImp").addEventListener("click", imprimir);
 // ---------- Agregar al celular ----------
 let pedidoInstalar = null;
 const botonInstalar = document.getElementById("instalar");
-const esIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const esIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const esSafariIOS = esIOS && /safari/i.test(navigator.userAgent) && !/crios|fxios|edgios|opios|gsa\/|fban|fbav|instagram|line\/|tiktok/i.test(navigator.userAgent);
+const ICONO_COMPARTIR = '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Compartir"><path d="M12 15V3"/><path d="M8 7l4-4 4 4"/><path d="M7 10H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2h-1"/></svg>';
 const yaInstalada = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
 window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); pedidoInstalar = e; if (!yaInstalada) botonInstalar.hidden = false; });
 if (!yaInstalada && (esIOS || matchMedia("(pointer:coarse)").matches)) botonInstalar.hidden = false;
-function ayuda(texto, pasos){
+function ayuda(texto, pasos, opciones = {}){
   document.getElementById("ayudaTexto").textContent = texto;
-  document.getElementById("ayudaPasos").innerHTML = pasos.map(p => `<li>${p}</li>`).join("");
+  document.getElementById("ayudaPasos").innerHTML = pasos.map(p => `<li><span>${p}</span></li>`).join("");
+  document.getElementById("ayudaFlecha").hidden = !opciones.flecha;
+  document.getElementById("ayudaCopiar").hidden = !opciones.copiar;
   document.getElementById("ayuda").showModal();
 }
 botonInstalar.addEventListener("click", async () => {
   if (pedidoInstalar) { pedidoInstalar.prompt(); const r = await pedidoInstalar.userChoice; if (r.outcome === "accepted") botonInstalar.hidden = true; pedidoInstalar = null; return; }
-  if (esIOS) ayuda("Así queda la página como una app en tu iPhone:", ["Abre esta página en <b>Safari</b>.", "Toca el botón <b>Compartir</b> (cuadrado con flecha ⬆️).", "Elige <b>Agregar a inicio</b> y luego <b>Agregar</b>."]);
+  if (esIOS && esSafariIOS) ayuda("Así queda la página como una app en tu iPhone:", [`Toca el botón <b>Compartir</b> ${ICONO_COMPARTIR} (abajo en la pantalla; si no lo ves, toca <b>⋯</b>).`, "Desliza hacia arriba y elige <b>Agregar a inicio</b>.", "Toca <b>Agregar</b> (arriba a la derecha)."], { flecha: !/ipad/i.test(navigator.userAgent) && !(navigator.platform === "MacIntel") });
+  else if (esIOS) ayuda("Para agregarla al iPhone necesitas Safari:", ["Toca <b>Copiar enlace</b> aquí abajo y pégalo en <b>Safari</b>.", `En Safari toca <b>Compartir</b> ${ICONO_COMPARTIR}.`, "Elige <b>Agregar a inicio</b> y luego <b>Agregar</b>."], { copiar: true });
   else ayuda("Así queda la página como una app en tu celular:", ["Toca el menú <b>⋮</b> del navegador (arriba a la derecha).", "Elige <b>Agregar a la pantalla principal</b> o <b>Instalar app</b>.", "Confirma con <b>Agregar</b>."]);
 });
 document.getElementById("ayudaOk").addEventListener("click", () => document.getElementById("ayuda").close());
+document.getElementById("ayudaCopiar").addEventListener("click", async e => {
+  const b = e.currentTarget;
+  try { await navigator.clipboard.writeText(location.href.split("#")[0]); b.textContent = "✅ Enlace copiado"; }
+  catch { prompt("Copia este enlace y ábrelo en Safari:", location.href); }
+});
+document.getElementById("ayuda").addEventListener("close", () => { document.getElementById("ayudaCopiar").textContent = "📋 Copiar enlace"; });
 window.addEventListener("appinstalled", () => { botonInstalar.hidden = true; });
 document.getElementById("vCerrar").addEventListener("click", cerrarVisor);
 visor.addEventListener("click", e => { if (e.target === visor) cerrarVisor(); });
