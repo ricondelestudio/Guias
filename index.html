@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guías Escolares</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%23ffd54a'/%3E%3Cpath d='M12 20c7-3 14-3 20 1v28c-6-4-13-4-20-1z' fill='%23fff' stroke='%232f6fd6' stroke-width='3' stroke-linejoin='round'/%3E%3Cpath d='M52 20c-7-3-14-3-20 1v28c6-4 13-4 20-1z' fill='%23fff' stroke='%232f6fd6' stroke-width='3' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f6f4ef; --card:#ffffff; --text:#22252b; --muted:#6b7079; --line:#e6e2d8;
+    --accent:#2f6fd6; --accent-2:#1f55b0; --accent-ink:#ffffff;
+    --lenguaje:#e0576b; --matematicas:#2f6fd6; --ciencias:#2e9e6a; --historia:#c98a1b; --ingles:#8a5cd1; --otros:#6b7079;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:Nunito,system-ui,sans-serif;line-height:1.45}
+  header{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:var(--accent-ink);padding:24px 16px 70px;position:relative;overflow:hidden}
+  header::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.08)}
+  .wrap{max-width:960px;margin:0 auto;position:relative;z-index:1}
+  .brand{display:flex;align-items:center;gap:14px}
+  .logo{width:68px;height:68px;flex-shrink:0;filter:drop-shadow(0 4px 10px rgba(0,0,0,.18))}
+  header h1{margin:0;font-size:clamp(26px,5vw,38px);font-weight:900;letter-spacing:-.01em}
+  header p{margin:2px 0 0;opacity:.92}
+
+  .panel{max-width:960px;margin:-50px auto 0;padding:0 16px;position:relative;z-index:2}
+  .cursos{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:var(--card);border-radius:16px;padding:8px;box-shadow:0 8px 24px rgba(0,0,0,.08)}
+  .curso{border:0;background:transparent;color:var(--text);font:inherit;font-weight:800;font-size:16px;padding:12px 6px;border-radius:12px;cursor:pointer;line-height:1.1}
+  .curso small{display:block;font-weight:600;font-size:12px;color:var(--muted);margin-top:3px}
+  .curso[aria-pressed="true"]{background:var(--accent);color:#fff}
+  .curso[aria-pressed="true"] small{color:rgba(255,255,255,.85)}
+
+  h2{font-size:20px;margin:26px 2px 12px;font-weight:900}
+  .materias{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+  @media (min-width:700px){ .materias{grid-template-columns:repeat(5,1fr)} }
+  .materia{--c:var(--otros);text-align:left;border:2px solid var(--line);background:var(--card);color:var(--text);border-radius:16px;padding:14px;font:inherit;cursor:pointer;display:flex;flex-direction:column;gap:8px;transition:transform .12s}
+  .materia:hover{transform:translateY(-2px)}
+  .materia .ico{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:22px;background:color-mix(in srgb,var(--c) 15%,transparent)}
+  .materia b{font-size:16px}
+  .materia span{color:var(--muted);font-size:13px}
+  .materia[aria-pressed="true"]{border-color:var(--c);background:color-mix(in srgb,var(--c) 8%,var(--card))}
+
+  .tools{display:flex;gap:10px;align-items:center;margin:22px 0 10px;flex-wrap:wrap}
+  .tools h2{margin:0;flex:1;min-width:180px}
+  .search{display:flex;align-items:center;gap:8px;background:var(--card);border:2px solid var(--line);border-radius:12px;padding:8px 12px;flex:1;min-width:200px;max-width:340px}
+  .search input{border:0;outline:0;font:inherit;font-size:16px;width:100%;background:transparent;color:var(--text)}
+
+  .list{display:grid;gap:10px;padding-bottom:40px}
+  .item{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;border-left:6px solid var(--c)}
+  .item .info{flex:1;min-width:0}
+  .item .tag{font-size:12px;font-weight:800;color:var(--c);text-transform:uppercase;letter-spacing:.04em}
+  .item h3{margin:2px 0;font-size:17px;overflow-wrap:anywhere}
+  .item .date{color:var(--muted);font-size:14px}
+  .btn{flex-shrink:0;display:inline-flex;align-items:center;gap:6px;background:var(--c);color:#fff;text-decoration:none;font-weight:700;padding:10px 14px;border-radius:10px;font-size:15px}
+  .btn svg{width:18px;height:18px}
+  .empty{text-align:center;color:var(--muted);padding:34px 16px;background:var(--card);border:2px dashed var(--line);border-radius:14px}
+  footer{text-align:center;color:var(--muted);font-size:13px;padding:0 16px 30px}
+
+  @media (max-width:560px){
+    .logo{width:54px;height:54px}
+    .curso{font-size:15px;padding:10px 4px}
+    .materias{grid-template-columns:repeat(2,1fr)}
+    .btn span{display:none} .btn{padding:11px}
+    .search{max-width:none}
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){--bg:#16181c;--card:#1f2228;--text:#eceef1;--muted:#9aa0aa;--line:#2c3038;--accent:#2a5fb8;--accent-2:#1b4790}
+  }
+  :root[data-theme="dark"]{--bg:#16181c;--card:#1f2228;--text:#eceef1;--muted:#9aa0aa;--line:#2c3038;--accent:#2a5fb8;--accent-2:#1b4790}
+</style>
+</head>
+<body>
+<header><div class="wrap brand">
+  <svg class="logo" viewBox="0 0 96 96" aria-hidden="true">
+    <circle cx="48" cy="48" r="46" fill="#ffd54a"/>
+    <circle cx="48" cy="48" r="46" fill="none" stroke="#fff" stroke-width="3" opacity=".6"/>
+    <!-- libro abierto -->
+    <path d="M18 34c10-4 20-4 30 2v34c-10-6-20-6-30-2z" fill="#fff" stroke="#1f55b0" stroke-width="3.5" stroke-linejoin="round"/>
+    <path d="M78 34c-10-4-20-4-30 2v34c10-6 20-6 30-2z" fill="#fff" stroke="#1f55b0" stroke-width="3.5" stroke-linejoin="round"/>
+    <path d="M24 44c6-2 12-2 18 1M24 52c6-2 12-2 18 1M24 60c6-2 12-2 18 1" stroke="#9db9ea" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+    <path d="M54 45c6-3 12-3 18-1M54 53c6-3 12-3 18-1" stroke="#9db9ea" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+    <!-- lápiz -->
+    <g transform="rotate(-38 66 30)">
+      <rect x="58" y="14" width="10" height="30" rx="2" fill="#e0576b"/>
+      <rect x="58" y="14" width="10" height="6" rx="2" fill="#f4a6b2"/>
+      <path d="M58 44l5 9 5-9z" fill="#f5d7a8"/>
+      <path d="M61.6 50.5l1.4 2.5 1.4-2.5z" fill="#22252b"/>
+    </g>
+    <!-- estrellita -->
+    <path d="M24 18l2 5 5 .5-4 3.3 1.3 5-4.3-2.8-4.3 2.8 1.3-5-4-3.3 5-.5z" fill="#fff"/>
+  </svg>
+  <div>
+    <h1>Guías Escolares</h1>
+    <p>Elige el curso y la asignatura para descargar las guías.</p>
+  </div>
+</div></header>
+
+<div class="panel">
+  <div class="cursos" id="cursos" role="group" aria-label="Cursos"></div>
+
+  <h2 id="tituloMaterias">Asignaturas</h2>
+  <div class="materias" id="materias"></div>
+
+  <div class="tools">
+    <h2 id="tituloLista">Guías</h2>
+    <label class="search"><span aria-hidden="true">🔎</span><input id="q" type="search" placeholder="Buscar guía"></label>
+  </div>
+  <div class="list" id="list"></div>
+</div>
+<footer>Página hecha por apoderados · Se actualiza cada vez que se sube una guía nueva</footer>
+
+<script>
+const CURSOS = ["1° Básico","2° Básico","3° Básico","4° Básico"];
+const MATERIAS = [
+  {n:"Lenguaje", c:"--lenguaje", i:"📖"},
+  {n:"Matemáticas", c:"--matematicas", i:"➗"},
+  {n:"Ciencias", c:"--ciencias", i:"🌱"},
+  {n:"Historia", c:"--historia", i:"🗺️"},
+  {n:"Inglés", c:"--ingles", i:"🔤"}
+];
+// Guías de ejemplo. En la versión real esta lista se arma sola desde las carpetas.
+const EJEMPLO = [
+  {curso:"1° Básico", asig:"Lenguaje", titulo:"Las vocales", fecha:"2026-11-16", archivo:"#"},
+  {curso:"1° Básico", asig:"Lenguaje", titulo:"Letra M y P", fecha:"2026-11-05", archivo:"#"},
+  {curso:"1° Básico", asig:"Matemáticas", titulo:"Contar hasta 20", fecha:"2026-11-12", archivo:"#"},
+  {curso:"1° Básico", asig:"Ciencias", titulo:"Los cinco sentidos", fecha:"2026-11-09", archivo:"#"},
+  {curso:"2° Básico", asig:"Matemáticas", titulo:"Sumas con reserva", fecha:"2026-11-17", archivo:"#"},
+  {curso:"2° Básico", asig:"Lenguaje", titulo:"Sustantivos comunes y propios", fecha:"2026-11-11", archivo:"#"},
+  {curso:"2° Básico", asig:"Historia", titulo:"Mi familia y mi comunidad", fecha:"2026-11-04", archivo:"#"},
+  {curso:"3° Básico", asig:"Matemáticas", titulo:"Fracciones y números mixtos", fecha:"2026-11-18", archivo:"#"},
+  {curso:"3° Básico", asig:"Matemáticas", titulo:"Tablas de multiplicar del 6 al 9", fecha:"2026-11-06", archivo:"#"},
+  {curso:"3° Básico", asig:"Lenguaje", titulo:"Comprensión lectora: La fábula", fecha:"2026-11-17", archivo:"#"},
+  {curso:"3° Básico", asig:"Ciencias", titulo:"El ciclo del agua", fecha:"2026-11-14", archivo:"#"},
+  {curso:"3° Básico", asig:"Historia", titulo:"Pueblos originarios de Chile", fecha:"2026-11-12", archivo:"#"},
+  {curso:"3° Básico", asig:"Inglés", titulo:"Animals and colors", fecha:"2026-11-10", archivo:"#"},
+  {curso:"4° Básico", asig:"Ciencias", titulo:"El sistema solar", fecha:"2026-11-15", archivo:"#"},
+  {curso:"4° Básico", asig:"Matemáticas", titulo:"División con resto", fecha:"2026-11-13", archivo:"#"},
+  {curso:"4° Básico", asig:"Inglés", titulo:"Daily routines", fecha:"2026-11-02", archivo:"#"}
+];
+const mat = n => MATERIAS.find(m=>m.n===n) || {n, c:"--otros", i:"📄"};
+const meses = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+const fmt = f => { if(!f) return ""; const [y,m,d]=f.split("-"); return `${+d} de ${meses[m-1]} ${y}`; };
+const esc = s => String(s).replace(/[&<>"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
+const icon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-5-5m5 5l5-5M5 21h14"/></svg>';
+
+let guias = [], curso = CURSOS[0], materia = null;
+try { const s = localStorage.getItem("curso"); if (CURSOS.includes(s)) curso = s; } catch(e){}
+
+function pintarCursos(){
+  document.getElementById("cursos").innerHTML = CURSOS.map(c => {
+    const [num, nivel] = c.split(" ");
+    return `<button class="curso" aria-pressed="${c===curso}" data-c="${c}">${num}<small>${nivel}</small></button>`;
+  }).join("");
+}
+function pintarMaterias(){
+  document.getElementById("tituloMaterias").textContent = `Asignaturas de ${curso}`;
+  document.getElementById("materias").innerHTML = MATERIAS.map(m => {
+    const n = guias.filter(g => g.curso===curso && g.asig===m.n).length;
+    return `<button class="materia" style="--c:var(${m.c})" aria-pressed="${materia===m.n}" data-m="${m.n}">
+      <div class="ico">${m.i}</div><b>${m.n}</b><span>${n} guía${n===1?"":"s"}</span></button>`;
+  }).join("");
+}
+function pintarLista(){
+  const q = document.getElementById("q").value.trim().toLowerCase();
+  document.getElementById("tituloLista").textContent = materia ? `Guías de ${materia}` : `Todas las guías de ${curso}`;
+  const res = guias.filter(g => g.curso===curso && (!materia || g.asig===materia) && (g.titulo+" "+g.asig).toLowerCase().includes(q))
+                   .sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  document.getElementById("list").innerHTML = res.length ? res.map(g => `
+    <div class="item" style="--c:var(${mat(g.asig).c})">
+      <div class="info"><div class="tag">${esc(g.asig)}</div><h3>${esc(g.titulo)}</h3><div class="date">${fmt(g.fecha)}</div></div>
+      <a class="btn" href="${esc(g.archivo)}" download aria-label="Descargar ${esc(g.titulo)}">${icon}<span>Descargar</span></a>
+    </div>`).join("") : `<div class="empty">Todavía no hay guías aquí. ¡Pronto se subirán! 📚</div>`;
+}
+function pintar(){ pintarCursos(); pintarMaterias(); pintarLista(); }
+
+document.getElementById("cursos").addEventListener("click", e => {
+  const b = e.target.closest(".curso"); if(!b) return;
+  curso = b.dataset.c; materia = null;
+  try { localStorage.setItem("curso", curso); } catch(e){}
+  pintar();
+});
+document.getElementById("materias").addEventListener("click", e => {
+  const b = e.target.closest(".materia"); if(!b) return;
+  materia = materia===b.dataset.m ? null : b.dataset.m;
+  pintarMaterias(); pintarLista();
+  document.getElementById("tituloLista").scrollIntoView({behavior:"smooth", block:"start"});
+});
+document.getElementById("q").addEventListener("input", pintarLista);
+
+// --- Lectura de las guías reales desde las carpetas de GitHub ---
+// Carpetas: guias/<curso>/<asignatura>/<archivo>
+const CARPETA_CURSO = {"1-basico":"1° Básico","2-basico":"2° Básico","3-basico":"3° Básico","4-basico":"4° Básico"};
+const CARPETA_MATERIA = {"lenguaje":"Lenguaje","matematicas":"Matemáticas","ciencias":"Ciencias","historia":"Historia","ingles":"Inglés"};
+const EXT = /\.(pdf|docx?|pptx?|xlsx?|jpe?g|png)$/i;
+
+function desdeRutas(rutas){
+  return rutas.map(ruta => {
+    const p = ruta.split("/");
+    if (p.length !== 4 || p[0] !== "guias" || !EXT.test(p[3])) return null;
+    const curso = CARPETA_CURSO[p[1].toLowerCase()], asig = CARPETA_MATERIA[p[2].toLowerCase()];
+    if (!curso || !asig) return null;
+    let nombre = p[3].replace(EXT, ""), fecha = "";
+    const m = nombre.match(/^(\d{4}-\d{2}-\d{2})[\s_-]*(.*)$/);
+    if (m) { fecha = m[1]; nombre = m[2] || nombre; }
+    nombre = nombre.replace(/[_]+/g, " ").trim();
+    return {curso, asig, titulo: nombre, fecha, archivo: ruta.split("/").map(encodeURIComponent).join("/")};
+  }).filter(Boolean);
+}
+
+async function cargarGuias(){
+  const h = location.hostname;
+  if (!h.endsWith(".github.io")) return fetch("guias.json").then(r=>r.ok?r.json():Promise.reject()).catch(()=>EJEMPLO);
+  const usuario = h.replace(".github.io","");
+  const repo = location.pathname.split("/").filter(Boolean)[0] || h;
+  for (const rama of ["main","master"]) {
+    const r = await fetch(`https://api.github.com/repos/${usuario}/${repo}/git/trees/${rama}?recursive=1`);
+    if (r.ok) { const d = await r.json(); return desdeRutas(d.tree.filter(t=>t.type==="blob").map(t=>t.path)); }
+  }
+  throw new Error("sin acceso");
+}
+
+cargarGuias().then(d => { guias = d; pintar(); }).catch(() => {
+  guias = []; pintar();
+  document.getElementById("list").innerHTML = `<div class="empty">No pudimos cargar las guías. Intenta de nuevo en unos minutos.</div>`;
+});
+</script>
+</body>
+</html>
