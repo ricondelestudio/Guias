@@ -47,6 +47,20 @@
   #ayudaFlecha[hidden]{display:none}
   #ayudaFlecha span{display:block;font-size:34px;line-height:1}
   @keyframes rebote{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
+  /* Guía paso a paso para iPhone: queda fija arriba para que se vea aunque el menú Compartir esté abierto */
+  #guiaIOS{position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top));z-index:1000;max-width:480px;margin:0 auto;background:#fff;color:#1c1c1e;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.35);padding:10px 12px 8px}
+  #guiaIOS[hidden],#guiaFlecha[hidden]{display:none}
+  #guiaIOS .gi-cab{display:flex;align-items:center;justify-content:space-between;gap:8px;font-weight:900;font-size:16px;margin-bottom:2px}
+  #guiaIOS .gi-cab button{flex:none;border:0;background:#e9e9ee;color:#1c1c1e;border-radius:50%;width:32px;height:32px;font-size:15px;cursor:pointer}
+  #guiaIOS .gi-paso{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px solid #e5e5ea;font-size:15px;line-height:1.3}
+  #guiaIOS .gi-paso:first-of-type{border-top:0}
+  #guiaIOS .gi-n{flex:none;width:24px;height:24px;border-radius:50%;background:#2f6fd6;color:#fff;font-weight:800;display:grid;place-items:center;font-size:13px}
+  #guiaIOS .gi-ico{flex:none;width:36px;height:36px;border-radius:10px;background:#f2f2f7;display:grid;place-items:center;color:#007aff}
+  #guiaIOS .gi-ico svg{width:21px;height:21px}
+  #guiaIOS .gi-ico.gris{color:#1c1c1e}
+  #guiaIOS .gi-nota{font-size:12px;color:#6b7079;margin-top:2px}
+  #guiaFlecha{position:fixed;left:50%;bottom:calc(6px + env(safe-area-inset-bottom));z-index:1000;transform:translateX(-50%);background:#2f6fd6;color:#fff;font-weight:800;font-size:14px;text-align:center;padding:6px 14px 4px;border-radius:14px;white-space:nowrap;box-shadow:0 6px 18px rgba(0,0,0,.35);animation:rebote 1s ease-in-out infinite;pointer-events:none}
+  #guiaFlecha span{display:block;font-size:24px;line-height:1}
   .doodles{position:absolute;right:0;top:0;height:100%;width:min(560px,60%);pointer-events:none}
   .doodles .f{animation:flota 5s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
   .doodles .f2{animation-duration:6.5s;animation-delay:-2s}
@@ -232,6 +246,12 @@
   <button id="ayudaOk">Entendido</button>
   <div id="ayudaFlecha" hidden><span>⬇️</span>Compartir</div>
 </dialog>
+<div id="guiaIOS" role="dialog" aria-label="Cómo agregar al iPhone" hidden>
+  <div class="gi-cab">📲 Agregar al iPhone en 3 toques <button id="guiaCerrar" aria-label="Cerrar">✕</button></div>
+  <div id="guiaPasos"></div>
+  <div class="gi-nota">Estas instrucciones se quedan aquí arriba mientras lo haces.</div>
+</div>
+<div id="guiaFlecha" hidden>Toca Compartir aquí abajo<span>⬇</span></div>
 <iframe id="impresion" title="Impresión" style="position:fixed;width:0;height:0;border:0;visibility:hidden" aria-hidden="true"></iframe>
 
 <script>
@@ -412,12 +432,30 @@ function ayuda(texto, pasos, opciones = {}){
 }
 botonInstalar.addEventListener("click", async () => {
   if (pedidoInstalar) { pedidoInstalar.prompt(); const r = await pedidoInstalar.userChoice; if (r.outcome === "accepted") botonInstalar.hidden = true; pedidoInstalar = null; return; }
-  if (esIOS && esSafariIOS) ayuda("Así queda la página como una app en tu iPhone:", [`Toca el botón <b>Compartir</b> ${ICONO_COMPARTIR} (abajo en la pantalla; si no lo ves, toca <b>⋯</b>).`, "Desliza hacia arriba y elige <b>Agregar a inicio</b>.", "Toca <b>Agregar</b> (arriba a la derecha)."], { flecha: !/ipad/i.test(navigator.userAgent) && !(navigator.platform === "MacIntel") });
+  if (esIOS && esSafariIOS) guiaIOS();
   else if (esIOS) ayuda("Para agregarla al iPhone necesitas Safari:", ["Toca <b>Copiar enlace</b> aquí abajo y pégalo en <b>Safari</b>.", `En Safari toca <b>Compartir</b> ${ICONO_COMPARTIR}.`, "Elige <b>Agregar a inicio</b> y luego <b>Agregar</b>."], { copiar: true });
   else ayuda("Así queda la página como una app en tu celular:", ["Toca el menú <b>⋮</b> del navegador (arriba a la derecha).", "Elige <b>Agregar a la pantalla principal</b> o <b>Instalar app</b>.", "Confirma con <b>Agregar</b>."]);
 });
 document.getElementById("ayudaOk").addEventListener("click", () => document.getElementById("ayuda").close());
-document.getElementById("ayudaCopiar").addEventListener("click", async e => {
+
+// Guía para iPhone (Safari): franja fija arriba con los mismos íconos que muestra el iPhone
+const GI = {
+  compartir: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M8 7l4-4 4 4"/><path d="M7 10H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2h-1"/></svg>',
+  vermas: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10l5 5 5-5"/></svg>',
+  inicio: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8.5v7M8.5 12h7"/></svg>'
+};
+function guiaIOS(){
+  const paso = (n, ico, txt, gris) => `<div class="gi-paso"><span class="gi-n">${n}</span><span class="gi-ico${gris ? " gris" : ""}">${ico}</span><span>${txt}</span></div>`;
+  document.getElementById("guiaPasos").innerHTML =
+    paso(1, GI.compartir, "Toca <b>Compartir</b> abajo en la pantalla. Si no lo ves, toca primero <b>⋯</b>.") +
+    paso(2, GI.vermas, "En el menú que se abre, toca <b>Ver más</b> o desliza el menú hacia arriba.", true) +
+    paso(3, GI.inicio, "Elige <b>Agregar a inicio</b> y luego <b>Agregar</b>. ¡Listo!", true);
+  document.getElementById("guiaIOS").hidden = false;
+  document.getElementById("guiaFlecha").hidden = /ipad/i.test(navigator.userAgent) || navigator.platform === "MacIntel";
+  scrollTo({top: 0, behavior: "smooth"});
+}
+function cerrarGuiaIOS(){ document.getElementById("guiaIOS").hidden = true; document.getElementById("guiaFlecha").hidden = true; }
+document.getElementById("guiaCerrar").addEventListener("click", cerrarGuiaIOS);document.getElementById("ayudaCopiar").addEventListener("click", async e => {
   const b = e.currentTarget;
   try { await navigator.clipboard.writeText(location.href.split("#")[0]); b.textContent = "✅ Enlace copiado"; }
   catch { prompt("Copia este enlace y ábrelo en Safari:", location.href); }
