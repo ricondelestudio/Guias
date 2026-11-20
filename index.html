@@ -53,6 +53,10 @@
   .item .date{color:var(--muted);font-size:14px}
   .btn{flex-shrink:0;display:inline-flex;align-items:center;gap:6px;background:var(--c);color:#fff;text-decoration:none;font-weight:700;padding:10px 14px;border-radius:10px;font-size:15px}
   .btn svg{width:18px;height:18px}
+  .btn.sec{background:transparent;color:var(--c);border:2px solid var(--c);padding:8px 12px}
+  .acciones{display:flex;gap:8px;flex-shrink:0}
+  .thumb{width:64px;height:84px;flex-shrink:0;border-radius:8px;border:1px solid var(--line);background:#fff;overflow:hidden;display:grid;place-items:center;font-size:28px;text-decoration:none;box-shadow:0 2px 6px rgba(0,0,0,.06)}
+  .thumb canvas,.thumb img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
   .empty{text-align:center;color:var(--muted);padding:34px 16px;background:var(--card);border:2px dashed var(--line);border-radius:14px}
   footer{text-align:center;color:var(--muted);font-size:13px;padding:0 16px 30px}
 
@@ -143,6 +147,40 @@ const fmt = f => { if(!f) return ""; const [y,m,d]=f.split("-"); return `${+d} d
 const esc = s => String(s).replace(/[&<>"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
 const icon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-5-5m5 5l5-5M5 21h14"/></svg>';
 
+const ojo = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+const VISIBLE = /\.(pdf|jpe?g|png)$/i;
+
+// Miniatura de la primera página (se carga solo cuando la guía aparece en pantalla)
+let pdfLib = null;
+function cargarPdfJs(){
+  if (!pdfLib) pdfLib = new Promise((ok, falla) => {
+    const s = document.createElement("script");
+    s.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
+    s.onload = () => { pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"; ok(pdfjsLib); };
+    s.onerror = falla;
+    document.head.appendChild(s);
+  });
+  return pdfLib;
+}
+async function miniatura(el){
+  const src = el.dataset.src;
+  if (/\.(jpe?g|png)$/i.test(src)) { el.innerHTML = `<img src="${src}" alt="" loading="lazy">`; return; }
+  if (!/\.pdf$/i.test(src)) return;
+  try {
+    const lib = await cargarPdfJs();
+    const pdf = await lib.getDocument(src).promise;
+    const pag = await pdf.getPage(1);
+    const vp = pag.getViewport({scale: 200 / pag.getViewport({scale:1}).width});
+    const c = document.createElement("canvas");
+    c.width = vp.width; c.height = vp.height;
+    await pag.render({canvasContext: c.getContext("2d"), viewport: vp}).promise;
+    el.innerHTML = ""; el.appendChild(c);
+  } catch(e) { /* se queda el ícono 📄 */ }
+}
+const vigia = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) { vigia.unobserve(e.target); miniatura(e.target); }
+}), {rootMargin: "200px"});
+
 let guias = [], curso = CURSOS[0], materia = null;
 try { const s = localStorage.getItem("curso"); if (CURSOS.includes(s)) curso = s; } catch(e){}
 
@@ -167,9 +205,14 @@ function pintarLista(){
                    .sort((a,b)=>b.fecha.localeCompare(a.fecha));
   document.getElementById("list").innerHTML = res.length ? res.map(g => `
     <div class="item" style="--c:var(${mat(g.asig).c})">
+      <a class="thumb" href="${esc(g.archivo)}" target="_blank" rel="noopener" data-src="${esc(g.archivo)}" aria-label="Ver ${esc(g.titulo)}">📄</a>
       <div class="info"><div class="tag">${esc(g.asig)}</div><h3>${esc(g.titulo)}</h3><div class="date">${fmt(g.fecha)}</div></div>
-      <a class="btn" href="${esc(g.archivo)}" download aria-label="Descargar ${esc(g.titulo)}">${icon}<span>Descargar</span></a>
+      <div class="acciones">
+        ${VISIBLE.test(g.archivo) ? `<a class="btn sec" href="${esc(g.archivo)}" target="_blank" rel="noopener" aria-label="Ver ${esc(g.titulo)}">${ojo}<span>Ver</span></a>` : ""}
+        <a class="btn" href="${esc(g.archivo)}" download aria-label="Descargar ${esc(g.titulo)}">${icon}<span>Descargar</span></a>
+      </div>
     </div>`).join("") : `<div class="empty">Todavía no hay guías aquí. ¡Pronto se subirán! 📚</div>`;
+  document.querySelectorAll(".thumb[data-src]").forEach(el => vigia.observe(el));
 }
 function pintar(){ pintarCursos(); pintarMaterias(); pintarLista(); }
 
