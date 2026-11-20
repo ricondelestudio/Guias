@@ -6,6 +6,11 @@
 <title>Guías Escolares</title>
 <meta name="description" content="Guías escolares de 1° a 4° Básico para descargar.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%23ffd54a'/%3E%3Cpath d='M12 20c7-3 14-3 20 1v28c-6-4-13-4-20-1z' fill='%23fff' stroke='%232f6fd6' stroke-width='3' stroke-linejoin='round'/%3E%3Cpath d='M52 20c-7-3-14-3-20 1v28c6-4 13-4 20-1z' fill='%23fff' stroke='%232f6fd6' stroke-width='3' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="iconos/apple-touch-icon.png">
+<meta name="theme-color" content="#2f6fd6">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Guías">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -25,6 +30,13 @@
   .logo{width:72px;height:72px;flex-shrink:0;filter:drop-shadow(0 4px 10px rgba(0,0,0,.2))}
   header h1{margin:0;font-size:clamp(28px,5vw,40px);font-weight:900;letter-spacing:-.01em}
   header p{margin:2px 0 0;opacity:.92}
+  .instalar{margin-top:10px;display:inline-flex;align-items:center;gap:6px;background:#fff;color:var(--accent-2);border:0;border-radius:999px;padding:8px 14px;font-weight:800;font-size:14px;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.15)}
+  .instalar[hidden]{display:none}
+  dialog#ayuda{border:0;border-radius:18px;padding:22px;max-width:340px;background:var(--card);color:var(--text)}
+  dialog#ayuda::backdrop{background:rgba(15,18,25,.6)}
+  dialog#ayuda h3{margin:0 0 8px}
+  dialog#ayuda ol{padding-left:20px;margin:0 0 14px}
+  dialog#ayuda button{width:100%;background:var(--accent);color:#fff;border:0;border-radius:12px;padding:11px;font-weight:800;cursor:pointer}
   .doodles{position:absolute;right:0;top:0;height:100%;width:min(560px,60%);pointer-events:none}
   .doodles .f{animation:flota 5s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
   .doodles .f2{animation-duration:6.5s;animation-delay:-2s}
@@ -171,6 +183,7 @@
     <div>
       <h1>Guías Escolares</h1>
       <p>Elige el curso y la asignatura para ver y descargar las guías.</p>
+      <button class="instalar" id="instalar" hidden>📲 Agregar al celular</button>
     </div>
   </div>
   <svg class="ola" viewBox="0 0 1440 34" preserveAspectRatio="none" aria-hidden="true"><path d="M0 20 C 240 0, 480 34, 720 18 S 1200 0, 1440 16 V34 H0z" fill="var(--bg)"/></svg>
@@ -193,12 +206,21 @@
 <dialog id="visor" aria-labelledby="vTitulo">
   <div class="vbar" id="vbar">
     <div class="vt"><b id="vTitulo"></b><span id="vSub"></span></div>
+    <button class="btn sec" id="vImp" aria-label="Imprimir" title="Imprimir"></button>
     <a class="btn wa" id="vWa" target="_blank" rel="noopener" aria-label="Compartir por WhatsApp"></a>
     <a class="btn prim" id="vDesc" download></a>
     <button class="cerrar" id="vCerrar" aria-label="Cerrar">✕</button>
   </div>
   <div class="vpags" id="vPags"></div>
 </dialog>
+
+<dialog id="ayuda">
+  <h3>📲 Agregar al celular</h3>
+  <p id="ayudaTexto"></p>
+  <ol id="ayudaPasos"></ol>
+  <button id="ayudaOk">Entendido</button>
+</dialog>
+<iframe id="impresion" title="Impresión" style="position:fixed;width:0;height:0;border:0;visibility:hidden" aria-hidden="true"></iframe>
 
 <script>
 const CURSOS = ["1° Básico","2° Básico","3° Básico","4° Básico"];
@@ -230,6 +252,7 @@ const esc = s => String(s).replace(/[&<>"]/g, ch => ({"&":"&amp;","<":"&lt;",">"
 const I = {
   bajar:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-5-5m5 5l5-5M5 21h14"/></svg>',
   ojo:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
+  imp:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 14h12v7H6z" fill="var(--card,#fff)"/></svg>',
   wa:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.6-.3z"/></svg>'
 };
 const VISIBLE = /\.(pdf|jpe?g|png)$/i, IMG = /\.(jpe?g|png)$/i;
@@ -256,6 +279,7 @@ async function dibujar(pdf, n, anchoCss){
 }
 async function portada(el){
   const src = el.dataset.src;
+  if (el.dataset.portada) { el.insertAdjacentHTML("afterbegin", `<img src="${el.dataset.portada}" alt="" loading="lazy">`); el.querySelector(".ph")?.remove(); return; }
   if (IMG.test(src)) { el.insertAdjacentHTML("afterbegin", `<img src="${src}" alt="" loading="lazy">`); el.querySelector(".ph")?.remove(); return; }
   if (!/\.pdf$/i.test(src)) return;
   try { const c = await dibujar(await abrirPdf(src), 1, el.clientWidth || 300); el.querySelector(".ph")?.remove(); el.prepend(c); } catch(e) {}
@@ -294,7 +318,7 @@ function pintarLista(){
   document.getElementById("list").innerHTML = res.length ? res.map(g => {
     const i = guias.indexOf(g), ver = VISIBLE.test(g.archivo);
     return `<article class="tarjeta" style="--c:var(${mat(g.asig).c})">
-      <button class="portada" ${ver?`data-ver="${i}"`:"disabled"} data-src="${esc(g.archivo)}" aria-label="Ver ${esc(g.titulo)}">
+      <button class="portada" ${ver?`data-ver="${i}"`:"disabled"} data-src="${esc(g.archivo)}" ${g.portada?`data-portada="${esc(g.portada)}"`:""} aria-label="Ver ${esc(g.titulo)}">
         <span class="cinta">${esc(g.asig)}</span><span class="ph">📄</span>
         ${ver?`<span class="lupa">${I.ojo} Ver guía</span>`:""}
       </button>
@@ -322,6 +346,8 @@ async function abrirVisor(g){
   document.getElementById("vSub").textContent = `${g.asig} · ${g.curso}${g.fecha ? " · " + fmt(g.fecha) : ""}`;
   const d = document.getElementById("vDesc"); d.href = g.archivo; d.innerHTML = `${I.bajar}<span>Descargar</span>`;
   const w = document.getElementById("vWa"); w.href = linkWa(g); w.innerHTML = I.wa;
+  document.getElementById("vImp").innerHTML = I.imp;
+  guiaAbierta = g;
   const caja = document.getElementById("vPags");
   caja.innerHTML = `<div class="vmsg">Cargando guía…</div>`; caja.scrollTop = 0;
   if (!visor.open) visor.showModal();
@@ -340,6 +366,41 @@ async function abrirVisor(g){
   }
 }
 function cerrarVisor(){ turnoVisor++; visor.close(); }
+
+// ---------- Imprimir ----------
+let guiaAbierta = null;
+function imprimir(){
+  const g = guiaAbierta; if (!g) return;
+  const tactil = matchMedia("(pointer:coarse)").matches;
+  if (tactil) { window.open(g.archivo, "_blank", "noopener"); return; }   // en celular: se abre y se imprime desde ahí
+  const f = document.getElementById("impresion");
+  f.onload = () => { try { f.contentWindow.focus(); f.contentWindow.print(); } catch(e) { window.open(g.archivo, "_blank", "noopener"); } };
+  f.src = IMG.test(g.archivo)
+    ? "data:text/html;charset=utf-8," + encodeURIComponent(`<img src="${new URL(g.archivo, location.href)}" style="max-width:100%" onload="setTimeout(()=>print(),200)">`)
+    : g.archivo;
+  if (IMG.test(g.archivo)) f.onload = null;
+}
+document.getElementById("vImp").addEventListener("click", imprimir);
+
+// ---------- Agregar al celular ----------
+let pedidoInstalar = null;
+const botonInstalar = document.getElementById("instalar");
+const esIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const yaInstalada = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); pedidoInstalar = e; if (!yaInstalada) botonInstalar.hidden = false; });
+if (!yaInstalada && (esIOS || matchMedia("(pointer:coarse)").matches)) botonInstalar.hidden = false;
+function ayuda(texto, pasos){
+  document.getElementById("ayudaTexto").textContent = texto;
+  document.getElementById("ayudaPasos").innerHTML = pasos.map(p => `<li>${p}</li>`).join("");
+  document.getElementById("ayuda").showModal();
+}
+botonInstalar.addEventListener("click", async () => {
+  if (pedidoInstalar) { pedidoInstalar.prompt(); const r = await pedidoInstalar.userChoice; if (r.outcome === "accepted") botonInstalar.hidden = true; pedidoInstalar = null; return; }
+  if (esIOS) ayuda("Así queda la página como una app en tu iPhone:", ["Abre esta página en <b>Safari</b>.", "Toca el botón <b>Compartir</b> (cuadrado con flecha ⬆️).", "Elige <b>Agregar a inicio</b> y luego <b>Agregar</b>."]);
+  else ayuda("Así queda la página como una app en tu celular:", ["Toca el menú <b>⋮</b> del navegador (arriba a la derecha).", "Elige <b>Agregar a la pantalla principal</b> o <b>Instalar app</b>.", "Confirma con <b>Agregar</b>."]);
+});
+document.getElementById("ayudaOk").addEventListener("click", () => document.getElementById("ayuda").close());
+window.addEventListener("appinstalled", () => { botonInstalar.hidden = true; });
 document.getElementById("vCerrar").addEventListener("click", cerrarVisor);
 visor.addEventListener("click", e => { if (e.target === visor) cerrarVisor(); });
 visor.addEventListener("close", () => { turnoVisor++; document.getElementById("vPags").innerHTML = ""; });
@@ -369,7 +430,9 @@ const CARPETA_CURSO = {"1-basico":"1° Básico","2-basico":"2° Básico","3-basi
 const CARPETA_MATERIA = {"lenguaje":"Lenguaje","matematicas":"Matemáticas","ciencias":"Ciencias","historia":"Historia","ingles":"Inglés"};
 const EXT = /\.(pdf|docx?|pptx?|xlsx?|jpe?g|png)$/i;
 
+const codificar = r => r.split("/").map(encodeURIComponent).join("/");
 function desdeRutas(rutas){
+  const hay = new Set(rutas);
   return rutas.map(ruta => {
     const p = ruta.split("/");
     if (p.length !== 4 || p[0] !== "guias" || !EXT.test(p[3])) return null;
@@ -379,7 +442,8 @@ function desdeRutas(rutas){
     const m = nombre.match(/^(\d{4}-\d{2}-\d{2})[\s_-]*(.*)$/);
     if (m) { fecha = m[1]; nombre = m[2] || nombre; }
     nombre = nombre.replace(/[_]+/g, " ").trim();
-    return {curso, asig, titulo: nombre, fecha, archivo: ruta.split("/").map(encodeURIComponent).join("/")};
+    const rutaPortada = `portadas/${p[1]}/${p[2]}/${p[3].replace(EXT, "")}.jpg`;
+    return {curso, asig, titulo: nombre, fecha, archivo: codificar(ruta), portada: hay.has(rutaPortada) ? codificar(rutaPortada) : ""};
   }).filter(Boolean);
 }
 

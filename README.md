@@ -32,6 +32,11 @@ Si el nombre no tiene fecha, la guía igual aparece, pero sin fecha y al final d
 No cambies los nombres de las carpetas (la página los usa para ordenar).
 El archivo `LEEME.txt` que hay en cada carpeta no se borra: sirve para que la carpeta exista.
 
+## Otras carpetas (no tocar)
+
+- `portadas`: fotos livianas de la primera página de cada guía, para que la página cargue rápido. Se crean con `herramientas/portadas.py`. Si subes una guía por la web y no tiene portada, la página la arma sola (solo es un poco más lenta).
+- `iconos` y `manifest.webmanifest`: el ícono para agregar la página al celular como app.
+
 ## Para borrar o corregir una guía
 
 Abre la guía en GitHub → menú **⋯** (arriba a la derecha) → **Delete file** → **Commit changes**.
