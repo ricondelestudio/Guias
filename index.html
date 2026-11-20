@@ -59,6 +59,7 @@
   #guiaIOS .gi-ico svg{width:21px;height:21px}
   #guiaIOS .gi-ico.gris{color:#1c1c1e}
   #guiaIOS .gi-nota{font-size:12px;color:#6b7079;margin-top:2px}
+  #guiaIOS .gi-listo{display:block;width:100%;margin-top:8px;border:0;border-radius:12px;padding:10px;background:#e8f6ee;color:#1f7a45;font:inherit;font-weight:800;font-size:15px;cursor:pointer}
   #guiaFlecha{position:fixed;left:50%;bottom:calc(6px + env(safe-area-inset-bottom));z-index:1000;transform:translateX(-50%);background:#2f6fd6;color:#fff;font-weight:800;font-size:14px;text-align:center;padding:6px 14px 4px;border-radius:14px;white-space:nowrap;box-shadow:0 6px 18px rgba(0,0,0,.35);animation:rebote 1s ease-in-out infinite;pointer-events:none}
   #guiaFlecha span{display:block;font-size:24px;line-height:1}
   .doodles{position:absolute;right:0;top:0;height:100%;width:min(560px,60%);pointer-events:none}
@@ -250,6 +251,7 @@
   <div class="gi-cab">📲 Agregar al iPhone en 3 toques <button id="guiaCerrar" aria-label="Cerrar">✕</button></div>
   <div id="guiaPasos"></div>
   <div class="gi-nota">Estas instrucciones se quedan aquí arriba mientras lo haces.</div>
+  <button class="gi-listo" id="guiaListo">✅ Ya la agregué</button>
 </div>
 <div id="guiaFlecha" hidden>Toca Compartir aquí abajo<span>⬇</span></div>
 <iframe id="impresion" title="Impresión" style="position:fixed;width:0;height:0;border:0;visibility:hidden" aria-hidden="true"></iframe>
@@ -422,7 +424,10 @@ const esSafariIOS = esIOS && /safari/i.test(navigator.userAgent) && !/crios|fxio
 const ICONO_COMPARTIR = '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Compartir"><path d="M12 15V3"/><path d="M8 7l4-4 4 4"/><path d="M7 10H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2h-1"/></svg>';
 const yaInstalada = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
 window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); pedidoInstalar = e; if (!yaInstalada) botonInstalar.hidden = false; });
-if (!yaInstalada && (esIOS || matchMedia("(pointer:coarse)").matches)) botonInstalar.hidden = false;
+// En iPhone, Safari no sabe si la página ya está en la pantalla de inicio: se recuerda cuando la persona toca "Ya la agregué"
+let marcadaAgregada = false;
+try { marcadaAgregada = localStorage.getItem("appAgregada") === "1"; } catch(e) {}
+if (!yaInstalada && !(esIOS && marcadaAgregada) && (esIOS || matchMedia("(pointer:coarse)").matches)) botonInstalar.hidden = false;
 function ayuda(texto, pasos, opciones = {}){
   document.getElementById("ayudaTexto").textContent = texto;
   document.getElementById("ayudaPasos").innerHTML = pasos.map(p => `<li><span>${p}</span></li>`).join("");
@@ -455,6 +460,11 @@ function guiaIOS(){
   scrollTo({top: 0, behavior: "smooth"});
 }
 function cerrarGuiaIOS(){ document.getElementById("guiaIOS").hidden = true; document.getElementById("guiaFlecha").hidden = true; }
+document.getElementById("guiaListo").addEventListener("click", () => {
+  try { localStorage.setItem("appAgregada", "1"); } catch(e) {}
+  cerrarGuiaIOS();
+  botonInstalar.hidden = true;
+});
 document.getElementById("guiaCerrar").addEventListener("click", cerrarGuiaIOS);document.getElementById("ayudaCopiar").addEventListener("click", async e => {
   const b = e.currentTarget;
   try { await navigator.clipboard.writeText(location.href.split("#")[0]); b.textContent = "✅ Enlace copiado"; }
