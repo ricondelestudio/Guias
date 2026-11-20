@@ -26,7 +26,7 @@ Si el nombre no tiene fecha, la guía igual aparece, pero sin fecha y al final d
 
 | Carpeta | En la página |
 |---|---|
-| `1-basico`, `2-basico`, `3-basico`, `4-basico` | 1° a 4° Básico |
+| `1-basico` … `5-basico` | 1° a 5° Básico |
 | `lenguaje`, `matematicas`, `ciencias`, `historia`, `ingles` | Lenguaje, Matemáticas, Ciencias, Historia, Inglés |
 
 No cambies los nombres de las carpetas (la página los usa para ordenar).

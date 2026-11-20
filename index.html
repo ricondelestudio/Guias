@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Guías Escolares</title>
-<meta name="description" content="Guías escolares de 1° a 4° Básico para descargar.">
+<meta name="description" content="Guías escolares de 1° a 5° Básico para descargar.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%23ffd54a'/%3E%3Cpath d='M12 20c7-3 14-3 20 1v28c-6-4-13-4-20-1z' fill='%23fff' stroke='%232f6fd6' stroke-width='3' stroke-linejoin='round'/%3E%3Cpath d='M52 20c-7-3-14-3-20 1v28c6-4 13-4 20-1z' fill='%23fff' stroke='%232f6fd6' stroke-width='3' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="iconos/apple-touch-icon.png">
@@ -32,6 +32,13 @@
   header p{margin:2px 0 0;opacity:.92}
   .instalar{margin-top:10px;display:inline-flex;align-items:center;gap:6px;background:#fff;color:var(--accent-2);border:0;border-radius:999px;padding:8px 14px;font-weight:800;font-size:14px;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.15)}
   .instalar[hidden]{display:none}
+  .botones-cab{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .botones-cab .instalar{margin-top:0}
+  .actualizar svg{width:16px;height:16px}
+  .actualizar.girando svg{animation:gira .8s linear infinite}
+  .actualizar:disabled{opacity:.8;cursor:default}
+  #aviso{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:#1f2228;color:#fff;font-weight:700;font-size:14px;padding:10px 16px;border-radius:999px;box-shadow:0 6px 20px rgba(0,0,0,.3);opacity:0;transition:opacity .2s, transform .2s;z-index:900;pointer-events:none;white-space:nowrap}
+  #aviso.ver{opacity:1;transform:translate(-50%,0)}
   dialog#ayuda{border:0;border-radius:18px;padding:22px;max-width:340px;background:var(--card);color:var(--text)}
   dialog#ayuda::backdrop{background:rgba(15,18,25,.6)}
   dialog#ayuda h3{margin:0 0 8px}
@@ -75,7 +82,7 @@
 
   /* ---------- Cursos ---------- */
   .panel{max-width:1040px;margin:-54px auto 0;padding:0 16px;position:relative;z-index:2}
-  .cursos{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:var(--card);border-radius:18px;padding:8px;box-shadow:0 8px 24px rgba(0,0,0,.08)}
+  .cursos{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;background:var(--card);border-radius:18px;padding:8px;box-shadow:0 8px 24px rgba(0,0,0,.08)}
   .curso{border:0;background:transparent;color:var(--text);font-weight:900;font-size:18px;padding:12px 6px;border-radius:14px;cursor:pointer;line-height:1.1}
   .curso small{display:block;font-weight:600;font-size:12px;color:var(--muted);margin-top:3px}
   .curso[aria-pressed="true"]{background:var(--accent);color:#fff;box-shadow:0 4px 12px rgba(47,111,214,.35)}
@@ -208,7 +215,10 @@
     <div>
       <h1>Guías Escolares</h1>
       <p>Elige el curso y la asignatura para ver y descargar las guías.</p>
-      <button class="instalar" id="instalar" hidden>📲 Agregar al celular</button>
+      <div class="botones-cab">
+        <button class="instalar actualizar" id="actualizar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg>Actualizar</button>
+        <button class="instalar" id="instalar" hidden>📲 Agregar al celular</button>
+      </div>
     </div>
   </div>
   <svg class="ola" viewBox="0 0 1440 34" preserveAspectRatio="none" aria-hidden="true"><path d="M0 20 C 240 0, 480 34, 720 18 S 1200 0, 1440 16 V34 H0z" fill="var(--bg)"/></svg>
@@ -257,7 +267,7 @@
 <iframe id="impresion" title="Impresión" style="position:fixed;width:0;height:0;border:0;visibility:hidden" aria-hidden="true"></iframe>
 
 <script>
-const CURSOS = ["1° Básico","2° Básico","3° Básico","4° Básico"];
+const CURSOS = ["1° Básico","2° Básico","3° Básico","4° Básico","5° Básico"];
 const SVG = {
   lenguaje:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"><path d="M5 12c6-3 13-3 19 1v25c-6-4-13-4-19-1z" fill="#fff"/><path d="M43 12c-6-3-13-3-19 1v25c6-4 13-4 19-1z" fill="#fff"/><text x="14.5" y="30" font-family="Nunito,sans-serif" font-size="12" font-weight="900" text-anchor="middle" fill="currentColor" stroke="none">A</text><text x="33.5" y="30" font-family="Nunito,sans-serif" font-size="12" font-weight="900" text-anchor="middle" fill="currentColor" stroke="none">a</text></svg>',
   matematicas:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><rect x="5" y="5" width="38" height="38" rx="9" fill="#fff"/><path d="M16 11v10M11 16h10M27 16h10M12 28l8 8M20 28l-8 8M27 32h10"/><circle cx="32" cy="27.5" r="1.3" fill="currentColor"/><circle cx="32" cy="36.5" r="1.3" fill="currentColor"/></svg>',
@@ -497,7 +507,7 @@ document.getElementById("q").addEventListener("input", pintarLista);
 
 // ---------- Lectura de las guías desde las carpetas de GitHub ----------
 // Carpetas: guias/<curso>/<asignatura>/<archivo>
-const CARPETA_CURSO = {"1-basico":"1° Básico","2-basico":"2° Básico","3-basico":"3° Básico","4-basico":"4° Básico"};
+const CARPETA_CURSO = {"1-basico":"1° Básico","2-basico":"2° Básico","3-basico":"3° Básico","4-basico":"4° Básico","5-basico":"5° Básico"};
 const CARPETA_MATERIA = {"lenguaje":"Lenguaje","matematicas":"Matemáticas","ciencias":"Ciencias","historia":"Historia","ingles":"Inglés"};
 const EXT = /\.(pdf|docx?|pptx?|xlsx?|jpe?g|png)$/i;
 
@@ -518,17 +528,45 @@ function desdeRutas(rutas){
   }).filter(Boolean);
 }
 
-async function cargarGuias(){
+let versionPagina = null;   // huella de index.html, para saber si cambió el diseño
+async function cargarGuias(sinCache){
   const h = location.hostname;
-  if (!h.endsWith(".github.io")) return fetch("guias.json").then(r=>r.ok?r.json():Promise.reject()).catch(()=>EJEMPLO);
+  const opc = sinCache ? {cache:"no-store"} : {};
+  if (!h.endsWith(".github.io")) return fetch("guias.json", opc).then(r=>r.ok?r.json():Promise.reject()).catch(()=>EJEMPLO);
   const usuario = h.replace(".github.io","");
   const repo = location.pathname.split("/").filter(Boolean)[0] || h;
   for (const rama of ["main","master"]) {
-    const r = await fetch(`https://api.github.com/repos/${usuario}/${repo}/git/trees/${rama}?recursive=1`);
-    if (r.ok) { const d = await r.json(); return desdeRutas(d.tree.filter(t=>t.type==="blob").map(t=>t.path)); }
+    const r = await fetch(`https://api.github.com/repos/${usuario}/${repo}/git/trees/${rama}?recursive=1`, opc);
+    if (r.ok) {
+      const d = await r.json();
+      const idx = d.tree.find(t => t.path === "index.html");
+      if (idx) { if (versionPagina === null) versionPagina = idx.sha; else if (idx.sha !== versionPagina) return {nuevaPagina: idx.sha}; }
+      return desdeRutas(d.tree.filter(t=>t.type==="blob").map(t=>t.path));
+    }
   }
   throw new Error("sin acceso");
 }
+
+// ---------- Botón Actualizar ----------
+function aviso(texto){
+  const a = document.getElementById("aviso");
+  a.textContent = texto; a.classList.add("ver");
+  clearTimeout(aviso.t); aviso.t = setTimeout(() => a.classList.remove("ver"), 2600);
+}
+document.getElementById("actualizar").addEventListener("click", async e => {
+  const b = e.currentTarget; if (b.disabled) return;
+  b.disabled = true; b.classList.add("girando");
+  try {
+    const antes = guias.length;
+    const d = await cargarGuias(true);
+    if (d && d.nuevaPagina) { aviso("✨ Hay una versión nueva, cargando…"); setTimeout(() => location.replace(location.pathname + "?v=" + d.nuevaPagina.slice(0, 7)), 700); return; }
+    guias = d; pintar();
+    const nuevas = guias.length - antes;
+    aviso(nuevas > 0 ? `✅ ${nuevas} guía${nuevas === 1 ? "" : "s"} nueva${nuevas === 1 ? "" : "s"}` : "✅ Todo al día");
+  } catch (err) {
+    aviso("No se pudo actualizar. Revisa tu internet.");
+  } finally { b.disabled = false; b.classList.remove("girando"); }
+});
 
 cargarGuias().then(d => {
   guias = d;
@@ -543,5 +581,6 @@ cargarGuias().then(d => {
   document.getElementById("list").innerHTML = `<div class="empty">No pudimos cargar las guías. Intenta de nuevo en unos minutos.</div>`;
 });
 </script>
+<div id="aviso" role="status" aria-live="polite"></div>
 </body>
 </html>
