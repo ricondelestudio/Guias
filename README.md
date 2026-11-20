@@ -30,7 +30,7 @@ Si el nombre no tiene fecha, la guía igual aparece, pero sin fecha y al final d
 | `lenguaje`, `matematicas`, `ciencias`, `historia`, `ingles` | Lenguaje, Matemáticas, Ciencias, Historia, Inglés |
 
 No cambies los nombres de las carpetas (la página los usa para ordenar).
-El archivo `.gitkeep` que hay en cada carpeta no se borra: sirve para que la carpeta exista.
+El archivo `LEEME.txt` que hay en cada carpeta no se borra: sirve para que la carpeta exista.
 
 ## Para borrar o corregir una guía
 
