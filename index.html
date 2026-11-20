@@ -4,69 +4,106 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Guías Escolares</title>
+<meta name="description" content="Guías escolares de 1° a 4° Básico para descargar.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%23ffd54a'/%3E%3Cpath d='M12 20c7-3 14-3 20 1v28c-6-4-13-4-20-1z' fill='%23fff' stroke='%232f6fd6' stroke-width='3' stroke-linejoin='round'/%3E%3Cpath d='M52 20c-7-3-14-3-20 1v28c6-4 13-4 20-1z' fill='%23fff' stroke='%232f6fd6' stroke-width='3' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#f6f4ef; --card:#ffffff; --text:#22252b; --muted:#6b7079; --line:#e6e2d8;
-    --accent:#2f6fd6; --accent-2:#1f55b0; --accent-ink:#ffffff;
+    --accent:#2f6fd6; --accent-2:#1f55b0; --accent-ink:#ffffff; --wa:#1fa855;
     --lenguaje:#e0576b; --matematicas:#2f6fd6; --ciencias:#2e9e6a; --historia:#c98a1b; --ingles:#8a5cd1; --otros:#6b7079;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--text);font-family:Nunito,system-ui,sans-serif;line-height:1.45}
-  header{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:var(--accent-ink);padding:24px 16px 70px;position:relative;overflow:hidden}
-  header::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.08)}
-  .wrap{max-width:960px;margin:0 auto;position:relative;z-index:1}
-  .brand{display:flex;align-items:center;gap:14px}
-  .logo{width:68px;height:68px;flex-shrink:0;filter:drop-shadow(0 4px 10px rgba(0,0,0,.18))}
-  header h1{margin:0;font-size:clamp(26px,5vw,38px);font-weight:900;letter-spacing:-.01em}
-  header p{margin:2px 0 0;opacity:.92}
+  button{font:inherit}
 
-  .panel{max-width:960px;margin:-50px auto 0;padding:0 16px;position:relative;z-index:2}
-  .cursos{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:var(--card);border-radius:16px;padding:8px;box-shadow:0 8px 24px rgba(0,0,0,.08)}
-  .curso{border:0;background:transparent;color:var(--text);font:inherit;font-weight:800;font-size:16px;padding:12px 6px;border-radius:12px;cursor:pointer;line-height:1.1}
+  /* ---------- Encabezado con dibujos ---------- */
+  header{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:var(--accent-ink);padding:26px 16px 78px;position:relative;overflow:hidden}
+  .wrap{max-width:1040px;margin:0 auto;position:relative;z-index:1}
+  .brand{display:flex;align-items:center;gap:14px;max-width:560px}
+  .logo{width:72px;height:72px;flex-shrink:0;filter:drop-shadow(0 4px 10px rgba(0,0,0,.2))}
+  header h1{margin:0;font-size:clamp(28px,5vw,40px);font-weight:900;letter-spacing:-.01em}
+  header p{margin:2px 0 0;opacity:.92}
+  .doodles{position:absolute;right:0;top:0;height:100%;width:min(560px,60%);pointer-events:none}
+  .doodles .f{animation:flota 5s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+  .doodles .f2{animation-duration:6.5s;animation-delay:-2s}
+  .doodles .f3{animation-duration:4.2s;animation-delay:-1s}
+  .doodles .gira{animation:gira 14s linear infinite;transform-box:fill-box;transform-origin:center}
+  @keyframes flota{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-7px) rotate(4deg)}}
+  @keyframes gira{to{transform:rotate(360deg)}}
+  .ola{position:absolute;left:0;right:0;bottom:-1px;width:100%;height:34px;display:block}
+  @media (prefers-reduced-motion:reduce){ .doodles *{animation:none!important} }
+  @media (max-width:640px){ .doodles{width:100%;opacity:.35} }
+
+  /* ---------- Cursos ---------- */
+  .panel{max-width:1040px;margin:-54px auto 0;padding:0 16px;position:relative;z-index:2}
+  .cursos{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:var(--card);border-radius:18px;padding:8px;box-shadow:0 8px 24px rgba(0,0,0,.08)}
+  .curso{border:0;background:transparent;color:var(--text);font-weight:900;font-size:18px;padding:12px 6px;border-radius:14px;cursor:pointer;line-height:1.1}
   .curso small{display:block;font-weight:600;font-size:12px;color:var(--muted);margin-top:3px}
-  .curso[aria-pressed="true"]{background:var(--accent);color:#fff}
+  .curso[aria-pressed="true"]{background:var(--accent);color:#fff;box-shadow:0 4px 12px rgba(47,111,214,.35)}
   .curso[aria-pressed="true"] small{color:rgba(255,255,255,.85)}
 
-  h2{font-size:20px;margin:26px 2px 12px;font-weight:900}
-  .materias{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
-  @media (min-width:700px){ .materias{grid-template-columns:repeat(5,1fr)} }
-  .materia{--c:var(--otros);text-align:left;border:2px solid var(--line);background:var(--card);color:var(--text);border-radius:16px;padding:14px;font:inherit;cursor:pointer;display:flex;flex-direction:column;gap:8px;transition:transform .12s}
-  .materia:hover{transform:translateY(-2px)}
-  .materia .ico{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:22px;background:color-mix(in srgb,var(--c) 15%,transparent)}
+  /* ---------- Asignaturas ---------- */
+  h2{font-size:21px;margin:28px 2px 12px;font-weight:900}
+  .materias{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  .materia{--c:var(--otros);text-align:left;border:2px solid var(--line);background:var(--card);color:var(--text);border-radius:18px;padding:14px;cursor:pointer;display:flex;flex-direction:column;gap:6px;transition:transform .15s, box-shadow .15s}
+  .materia:hover{transform:translateY(-3px) rotate(-1deg);box-shadow:0 8px 18px rgba(0,0,0,.07)}
+  .materia .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:var(--c);background:color-mix(in srgb,var(--c) 14%,transparent);margin-bottom:4px}
+  .materia .ico svg{width:40px;height:40px}
   .materia b{font-size:16px}
   .materia span{color:var(--muted);font-size:13px}
   .materia[aria-pressed="true"]{border-color:var(--c);background:color-mix(in srgb,var(--c) 8%,var(--card))}
+  @media (max-width:760px){ .materias{grid-template-columns:repeat(3,1fr)} }
+  @media (max-width:480px){ .materias{grid-template-columns:repeat(2,1fr)} }
 
-  .tools{display:flex;gap:10px;align-items:center;margin:22px 0 10px;flex-wrap:wrap}
-  .tools h2{margin:0;flex:1;min-width:180px}
+  /* ---------- Galería de guías ---------- */
+  .tools{display:flex;gap:10px;align-items:center;margin:26px 0 12px;flex-wrap:wrap}
+  .tools h2{margin:0;flex:1;min-width:200px}
   .search{display:flex;align-items:center;gap:8px;background:var(--card);border:2px solid var(--line);border-radius:12px;padding:8px 12px;flex:1;min-width:200px;max-width:340px}
   .search input{border:0;outline:0;font:inherit;font-size:16px;width:100%;background:transparent;color:var(--text)}
-
-  .list{display:grid;gap:10px;padding-bottom:40px}
-  .item{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;border-left:6px solid var(--c)}
-  .item .info{flex:1;min-width:0}
-  .item .tag{font-size:12px;font-weight:800;color:var(--c);text-transform:uppercase;letter-spacing:.04em}
-  .item h3{margin:2px 0;font-size:17px;overflow-wrap:anywhere}
-  .item .date{color:var(--muted);font-size:14px}
-  .btn{flex-shrink:0;display:inline-flex;align-items:center;gap:6px;background:var(--c);color:#fff;text-decoration:none;font-weight:700;padding:10px 14px;border-radius:10px;font-size:15px}
-  .btn svg{width:18px;height:18px}
-  .btn.sec{background:transparent;color:var(--c);border:2px solid var(--c);padding:8px 12px}
-  .acciones{display:flex;gap:8px;flex-shrink:0}
-  .thumb{width:64px;height:84px;flex-shrink:0;border-radius:8px;border:1px solid var(--line);background:#fff;overflow:hidden;display:grid;place-items:center;font-size:28px;text-decoration:none;box-shadow:0 2px 6px rgba(0,0,0,.06)}
-  .thumb canvas,.thumb img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
-  .empty{text-align:center;color:var(--muted);padding:34px 16px;background:var(--card);border:2px dashed var(--line);border-radius:14px}
+  .galeria{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px;padding-bottom:40px}
+  .tarjeta{--c:var(--otros);background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 2px 8px rgba(0,0,0,.04);transition:transform .15s, box-shadow .15s}
+  .tarjeta:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,0,0,.09)}
+  .portada{position:relative;aspect-ratio:4/3;background:#fff;border:0;padding:0;cursor:pointer;display:grid;place-items:center;overflow:hidden;border-bottom:4px solid var(--c)}
+  .portada canvas,.portada img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top}
+  .portada .ph{font-size:44px;opacity:.5}
+  .portada .lupa{position:absolute;right:10px;bottom:10px;background:rgba(0,0,0,.6);color:#fff;border-radius:999px;padding:5px 10px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:5px;opacity:0;transition:opacity .15s}
+  .portada:hover .lupa,.portada:focus-visible .lupa{opacity:1}
+  .portada .lupa svg{width:15px;height:15px}
+  .cinta{position:absolute;left:10px;top:10px;background:var(--c);color:#fff;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.05em;padding:4px 9px;border-radius:999px;box-shadow:0 2px 6px rgba(0,0,0,.15);z-index:1}
+  .cuerpo{padding:12px 14px 14px;display:flex;flex-direction:column;gap:10px;flex:1}
+  .cuerpo h3{margin:0;font-size:17px;line-height:1.25;overflow-wrap:anywhere}
+  .cuerpo .date{color:var(--muted);font-size:13px;margin-top:2px}
+  .acciones{display:flex;gap:8px;margin-top:auto}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:var(--c);color:#fff;text-decoration:none;font-weight:800;padding:10px 12px;border-radius:12px;font-size:15px;border:0;cursor:pointer;min-height:44px}
+  .btn svg{width:19px;height:19px;flex-shrink:0}
+  .btn.prim{flex:1}
+  .btn.sec{background:transparent;color:var(--c);border:2px solid var(--c);width:44px;padding:0}
+  .btn.wa{background:var(--wa);width:44px;padding:0}
+  .empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:30px 16px;background:var(--card);border:2px dashed var(--line);border-radius:18px}
+  .empty svg{width:110px;height:auto;display:block;margin:0 auto 6px}
   footer{text-align:center;color:var(--muted);font-size:13px;padding:0 16px 30px}
 
-  @media (max-width:560px){
-    .logo{width:54px;height:54px}
-    .curso{font-size:15px;padding:10px 4px}
-    .materias{grid-template-columns:repeat(2,1fr)}
-    .btn span{display:none} .btn{padding:11px}
-    .search{max-width:none}
+  /* ---------- Visor ---------- */
+  dialog#visor{width:min(980px,calc(100% - 24px));height:min(94vh,calc(100% - 24px));max-width:none;max-height:none;margin:auto;padding:0;border:0;border-radius:18px;background:var(--bg);color:var(--text);overflow:hidden}
+  dialog#visor::backdrop{background:rgba(15,18,25,.7)}
+  .vbar{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--card);border-bottom:1px solid var(--line);--c:var(--accent)}
+  .vbar .vt{flex:1;min-width:0}
+  .vbar .vt b{display:block;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .vbar .vt span{font-size:12px;color:var(--muted)}
+  .vbar .btn.prim{flex:0 0 auto;padding:10px 16px}
+  .cerrar{background:transparent;border:2px solid var(--line);color:var(--text);width:44px;height:44px;border-radius:12px;cursor:pointer;font-size:20px;line-height:1}
+  .vpags{height:calc(100% - 65px);overflow:auto;padding:16px;display:flex;flex-direction:column;align-items:center;gap:14px;background:#d9dce2}
+  .vpags canvas,.vpags img{width:100%;max-width:900px;height:auto;background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.15);border-radius:4px}
+  .vmsg{color:#444;font-weight:700;padding:30px}
+  @media (max-width:640px){
+    dialog#visor{width:100%;height:100%;border-radius:0}
+    .vpags{padding:8px;gap:8px}
+    .vbar .btn.prim span{display:none}
+    .vbar .btn.prim{flex:0 0 44px;padding:0}
   }
+
   @media (prefers-color-scheme:dark){
     :root:not([data-theme="light"]){--bg:#16181c;--card:#1f2228;--text:#eceef1;--muted:#9aa0aa;--line:#2c3038;--accent:#2a5fb8;--accent-2:#1b4790}
   }
@@ -74,30 +111,70 @@
 </style>
 </head>
 <body>
-<header><div class="wrap brand">
-  <svg class="logo" viewBox="0 0 96 96" aria-hidden="true">
-    <circle cx="48" cy="48" r="46" fill="#ffd54a"/>
-    <circle cx="48" cy="48" r="46" fill="none" stroke="#fff" stroke-width="3" opacity=".6"/>
-    <!-- libro abierto -->
-    <path d="M18 34c10-4 20-4 30 2v34c-10-6-20-6-30-2z" fill="#fff" stroke="#1f55b0" stroke-width="3.5" stroke-linejoin="round"/>
-    <path d="M78 34c-10-4-20-4-30 2v34c10-6 20-6 30-2z" fill="#fff" stroke="#1f55b0" stroke-width="3.5" stroke-linejoin="round"/>
-    <path d="M24 44c6-2 12-2 18 1M24 52c6-2 12-2 18 1M24 60c6-2 12-2 18 1" stroke="#9db9ea" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-    <path d="M54 45c6-3 12-3 18-1M54 53c6-3 12-3 18-1" stroke="#9db9ea" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-    <!-- lápiz -->
-    <g transform="rotate(-38 66 30)">
-      <rect x="58" y="14" width="10" height="30" rx="2" fill="#e0576b"/>
-      <rect x="58" y="14" width="10" height="6" rx="2" fill="#f4a6b2"/>
-      <path d="M58 44l5 9 5-9z" fill="#f5d7a8"/>
-      <path d="M61.6 50.5l1.4 2.5 1.4-2.5z" fill="#22252b"/>
+<header>
+  <!-- Dibujos decorativos -->
+  <svg class="doodles" viewBox="0 0 560 200" preserveAspectRatio="xMaxYMid meet" aria-hidden="true">
+    <!-- avión de papel con trayectoria -->
+    <path d="M150 150 C 200 110, 230 175, 285 120" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="2.5" stroke-dasharray="6 7" stroke-linecap="round"/>
+    <g class="f f2"><path d="M285 120 l34 -22 -10 34 -9 -8z" fill="#fff"/><path d="M300 124 l19 -26" stroke="#c9d8f5" stroke-width="2"/></g>
+    <!-- estrella -->
+    <g class="gira"><path d="M210 30l6 13 14 1.5-10.5 9.5 3 14-12.5-7.3-12.5 7.3 3-14-10.5-9.5 14-1.5z" fill="#ffd54a"/></g>
+    <!-- manzana -->
+    <g class="f">
+      <path d="M380 70c-14-10-34-2-34 20 0 22 16 38 26 38 5 0 6-3 8-3s3 3 8 3c10 0 26-16 26-38 0-22-20-30-34-20z" fill="#ff6b6b"/>
+      <path d="M380 70c0-8 3-14 8-18" stroke="#7a4a1d" stroke-width="4" stroke-linecap="round" fill="none"/>
+      <path d="M386 58c8-8 18-6 20-4-6 8-14 10-20 4z" fill="#5cc488"/>
+      <ellipse cx="364" cy="88" rx="5" ry="9" fill="rgba(255,255,255,.45)"/>
     </g>
-    <!-- estrellita -->
-    <path d="M24 18l2 5 5 .5-4 3.3 1.3 5-4.3-2.8-4.3 2.8 1.3-5-4-3.3 5-.5z" fill="#fff"/>
+    <!-- lápiz -->
+    <g class="f f3" transform="rotate(35 470 60)">
+      <rect x="462" y="10" width="16" height="70" rx="3" fill="#ffd54a"/>
+      <rect x="462" y="10" width="16" height="12" rx="3" fill="#ff9fb0"/>
+      <rect x="462" y="22" width="16" height="5" fill="#c9cfd8"/>
+      <path d="M462 80l8 16 8-16z" fill="#f5d7a8"/><path d="M467 90l3 6 3-6z" fill="#333"/>
+    </g>
+    <!-- bloque ABC -->
+    <g class="f f2">
+      <rect x="440" y="120" width="52" height="52" rx="9" fill="#8a5cd1"/>
+      <rect x="446" y="126" width="40" height="40" rx="6" fill="#a982e6"/>
+      <text x="466" y="155" font-family="Nunito,sans-serif" font-weight="900" font-size="24" fill="#fff" text-anchor="middle">A</text>
+    </g>
+    <!-- regla -->
+    <g class="f f3" transform="rotate(-12 520 120)">
+      <rect x="500" y="70" width="26" height="110" rx="4" fill="#5cc488"/>
+      <path d="M500 82h10M500 94h6M500 106h10M500 118h6M500 130h10M500 142h6M500 154h10M500 166h6" stroke="#2e7a54" stroke-width="2.5"/>
+    </g>
+    <!-- 1+2 -->
+    <text class="f" x="300" y="70" font-family="Nunito,sans-serif" font-weight="900" font-size="30" fill="rgba(255,255,255,.75)">1+2</text>
+    <!-- puntitos -->
+    <circle cx="250" cy="90" r="5" fill="rgba(255,255,255,.35)"/><circle cx="420" cy="30" r="6" fill="rgba(255,255,255,.3)"/>
+    <circle cx="330" cy="175" r="4" fill="rgba(255,255,255,.35)"/><circle cx="540" cy="40" r="4" fill="rgba(255,255,255,.4)"/>
+    <path d="M400 175l4 9 9 1-7 6 2 9-8-5-8 5 2-9-7-6 9-1z" fill="rgba(255,255,255,.5)"/>
   </svg>
-  <div>
-    <h1>Guías Escolares</h1>
-    <p>Elige el curso y la asignatura para descargar las guías.</p>
+
+  <div class="wrap brand">
+    <svg class="logo" viewBox="0 0 96 96" aria-hidden="true">
+      <circle cx="48" cy="48" r="46" fill="#ffd54a"/>
+      <circle cx="48" cy="48" r="46" fill="none" stroke="#fff" stroke-width="3" opacity=".6"/>
+      <path d="M18 34c10-4 20-4 30 2v34c-10-6-20-6-30-2z" fill="#fff" stroke="#1f55b0" stroke-width="3.5" stroke-linejoin="round"/>
+      <path d="M78 34c-10-4-20-4-30 2v34c10-6 20-6 30-2z" fill="#fff" stroke="#1f55b0" stroke-width="3.5" stroke-linejoin="round"/>
+      <path d="M24 44c6-2 12-2 18 1M24 52c6-2 12-2 18 1M24 60c6-2 12-2 18 1" stroke="#9db9ea" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+      <path d="M54 45c6-3 12-3 18-1M54 53c6-3 12-3 18-1" stroke="#9db9ea" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+      <g transform="rotate(-38 66 30)">
+        <rect x="58" y="14" width="10" height="30" rx="2" fill="#e0576b"/>
+        <rect x="58" y="14" width="10" height="6" rx="2" fill="#f4a6b2"/>
+        <path d="M58 44l5 9 5-9z" fill="#f5d7a8"/>
+        <path d="M61.6 50.5l1.4 2.5 1.4-2.5z" fill="#22252b"/>
+      </g>
+      <path d="M24 18l2 5 5 .5-4 3.3 1.3 5-4.3-2.8-4.3 2.8 1.3-5-4-3.3 5-.5z" fill="#fff"/>
+    </svg>
+    <div>
+      <h1>Guías Escolares</h1>
+      <p>Elige el curso y la asignatura para ver y descargar las guías.</p>
+    </div>
   </div>
-</div></header>
+  <svg class="ola" viewBox="0 0 1440 34" preserveAspectRatio="none" aria-hidden="true"><path d="M0 20 C 240 0, 480 34, 720 18 S 1200 0, 1440 16 V34 H0z" fill="var(--bg)"/></svg>
+</header>
 
 <div class="panel">
   <div class="cursos" id="cursos" role="group" aria-label="Cursos"></div>
@@ -109,78 +186,87 @@
     <h2 id="tituloLista">Guías</h2>
     <label class="search"><span aria-hidden="true">🔎</span><input id="q" type="search" placeholder="Buscar guía"></label>
   </div>
-  <div class="list" id="list"></div>
+  <div class="galeria" id="list"></div>
 </div>
 <footer>Página hecha por apoderados · Se actualiza cada vez que se sube una guía nueva</footer>
 
+<dialog id="visor" aria-labelledby="vTitulo">
+  <div class="vbar" id="vbar">
+    <div class="vt"><b id="vTitulo"></b><span id="vSub"></span></div>
+    <a class="btn wa" id="vWa" target="_blank" rel="noopener" aria-label="Compartir por WhatsApp"></a>
+    <a class="btn prim" id="vDesc" download></a>
+    <button class="cerrar" id="vCerrar" aria-label="Cerrar">✕</button>
+  </div>
+  <div class="vpags" id="vPags"></div>
+</dialog>
+
 <script>
 const CURSOS = ["1° Básico","2° Básico","3° Básico","4° Básico"];
+const SVG = {
+  lenguaje:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"><path d="M5 12c6-3 13-3 19 1v25c-6-4-13-4-19-1z" fill="#fff"/><path d="M43 12c-6-3-13-3-19 1v25c6-4 13-4 19-1z" fill="#fff"/><text x="14.5" y="30" font-family="Nunito,sans-serif" font-size="12" font-weight="900" text-anchor="middle" fill="currentColor" stroke="none">A</text><text x="33.5" y="30" font-family="Nunito,sans-serif" font-size="12" font-weight="900" text-anchor="middle" fill="currentColor" stroke="none">a</text></svg>',
+  matematicas:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><rect x="5" y="5" width="38" height="38" rx="9" fill="#fff"/><path d="M16 11v10M11 16h10M27 16h10M12 28l8 8M20 28l-8 8M27 32h10"/><circle cx="32" cy="27.5" r="1.3" fill="currentColor"/><circle cx="32" cy="36.5" r="1.3" fill="currentColor"/></svg>',
+  ciencias:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"><path d="M18 5h12M20 5v13L9 38a3 3 0 0 0 2.7 4.5h24.6A3 3 0 0 0 39 38L28 18V5" fill="#fff"/><path d="M13.5 31h21l3.3 6.5a2 2 0 0 1-1.8 3H12a2 2 0 0 1-1.8-3z" fill="currentColor" opacity=".35" stroke="none"/><circle cx="21" cy="35" r="2" fill="currentColor" stroke="none"/><circle cx="28" cy="33" r="1.4" fill="currentColor" stroke="none"/><circle cx="26" cy="25" r="1.4"/></svg>',
+  historia:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="24" cy="24" r="18" fill="#fff"/><ellipse cx="24" cy="24" rx="7.5" ry="18"/><path d="M6 24h36M9 14h30M9 34h30"/><path d="M34 2v12" stroke-width="2"/><path d="M34 3h9l-2.5 3 2.5 3h-9" fill="currentColor" stroke="none"/></svg>',
+  ingles:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"><path d="M8 8h32a4 4 0 0 1 4 4v18a4 4 0 0 1-4 4H23l-9 8v-8H8a4 4 0 0 1-4-4V12a4 4 0 0 1 4-4z" fill="#fff"/><text x="24" y="26.5" font-family="Nunito,sans-serif" font-size="13" font-weight="900" text-anchor="middle" fill="currentColor" stroke="none">Hi!</text></svg>'
+};
 const MATERIAS = [
-  {n:"Lenguaje", c:"--lenguaje", i:"📖"},
-  {n:"Matemáticas", c:"--matematicas", i:"➗"},
-  {n:"Ciencias", c:"--ciencias", i:"🌱"},
-  {n:"Historia", c:"--historia", i:"🗺️"},
-  {n:"Inglés", c:"--ingles", i:"🔤"}
+  {n:"Lenguaje", c:"--lenguaje", i:SVG.lenguaje},
+  {n:"Matemáticas", c:"--matematicas", i:SVG.matematicas},
+  {n:"Ciencias", c:"--ciencias", i:SVG.ciencias},
+  {n:"Historia", c:"--historia", i:SVG.historia},
+  {n:"Inglés", c:"--ingles", i:SVG.ingles}
 ];
-// Guías de ejemplo. En la versión real esta lista se arma sola desde las carpetas.
+// Guías de ejemplo (solo para ver la página en el computador antes de publicarla)
 const EJEMPLO = [
   {curso:"1° Básico", asig:"Lenguaje", titulo:"Las vocales", fecha:"2026-11-16", archivo:"#"},
-  {curso:"1° Básico", asig:"Lenguaje", titulo:"Letra M y P", fecha:"2026-11-05", archivo:"#"},
-  {curso:"1° Básico", asig:"Matemáticas", titulo:"Contar hasta 20", fecha:"2026-11-12", archivo:"#"},
-  {curso:"1° Básico", asig:"Ciencias", titulo:"Los cinco sentidos", fecha:"2026-11-09", archivo:"#"},
-  {curso:"2° Básico", asig:"Matemáticas", titulo:"Sumas con reserva", fecha:"2026-11-17", archivo:"#"},
-  {curso:"2° Básico", asig:"Lenguaje", titulo:"Sustantivos comunes y propios", fecha:"2026-11-11", archivo:"#"},
-  {curso:"2° Básico", asig:"Historia", titulo:"Mi familia y mi comunidad", fecha:"2026-11-04", archivo:"#"},
   {curso:"3° Básico", asig:"Matemáticas", titulo:"Fracciones y números mixtos", fecha:"2026-11-18", archivo:"#"},
-  {curso:"3° Básico", asig:"Matemáticas", titulo:"Tablas de multiplicar del 6 al 9", fecha:"2026-11-06", archivo:"#"},
   {curso:"3° Básico", asig:"Lenguaje", titulo:"Comprensión lectora: La fábula", fecha:"2026-11-17", archivo:"#"},
-  {curso:"3° Básico", asig:"Ciencias", titulo:"El ciclo del agua", fecha:"2026-11-14", archivo:"#"},
-  {curso:"3° Básico", asig:"Historia", titulo:"Pueblos originarios de Chile", fecha:"2026-11-12", archivo:"#"},
-  {curso:"3° Básico", asig:"Inglés", titulo:"Animals and colors", fecha:"2026-11-10", archivo:"#"},
-  {curso:"4° Básico", asig:"Ciencias", titulo:"El sistema solar", fecha:"2026-11-15", archivo:"#"},
-  {curso:"4° Básico", asig:"Matemáticas", titulo:"División con resto", fecha:"2026-11-13", archivo:"#"},
-  {curso:"4° Básico", asig:"Inglés", titulo:"Daily routines", fecha:"2026-11-02", archivo:"#"}
+  {curso:"3° Básico", asig:"Ciencias", titulo:"El ciclo del agua", fecha:"2026-11-14", archivo:"#"}
 ];
-const mat = n => MATERIAS.find(m=>m.n===n) || {n, c:"--otros", i:"📄"};
+const mat = n => MATERIAS.find(m=>m.n===n) || {n, c:"--otros", i:""};
 const meses = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
 const fmt = f => { if(!f) return ""; const [y,m,d]=f.split("-"); return `${+d} de ${meses[m-1]} ${y}`; };
 const esc = s => String(s).replace(/[&<>"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
-const icon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-5-5m5 5l5-5M5 21h14"/></svg>';
+const I = {
+  bajar:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-5-5m5 5l5-5M5 21h14"/></svg>',
+  ojo:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
+  wa:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.6-.3z"/></svg>'
+};
+const VISIBLE = /\.(pdf|jpe?g|png)$/i, IMG = /\.(jpe?g|png)$/i;
 
-const ojo = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
-const VISIBLE = /\.(pdf|jpe?g|png)$/i;
-
-// Miniatura de la primera página (se carga solo cuando la guía aparece en pantalla)
-let pdfLib = null;
+// ---------- PDF (pdf.js) ----------
+let pdfLib = null; const docs = {};
 function cargarPdfJs(){
   if (!pdfLib) pdfLib = new Promise((ok, falla) => {
     const s = document.createElement("script");
     s.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
     s.onload = () => { pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"; ok(pdfjsLib); };
-    s.onerror = falla;
-    document.head.appendChild(s);
+    s.onerror = falla; document.head.appendChild(s);
   });
   return pdfLib;
 }
-async function miniatura(el){
-  const src = el.dataset.src;
-  if (/\.(jpe?g|png)$/i.test(src)) { el.innerHTML = `<img src="${src}" alt="" loading="lazy">`; return; }
-  if (!/\.pdf$/i.test(src)) return;
-  try {
-    const lib = await cargarPdfJs();
-    const pdf = await lib.getDocument(src).promise;
-    const pag = await pdf.getPage(1);
-    const vp = pag.getViewport({scale: 200 / pag.getViewport({scale:1}).width});
-    const c = document.createElement("canvas");
-    c.width = vp.width; c.height = vp.height;
-    await pag.render({canvasContext: c.getContext("2d"), viewport: vp}).promise;
-    el.innerHTML = ""; el.appendChild(c);
-  } catch(e) { /* se queda el ícono 📄 */ }
+function abrirPdf(src){ return docs[src] ||= cargarPdfJs().then(lib => lib.getDocument(src).promise); }
+async function dibujar(pdf, n, anchoCss){
+  const pag = await pdf.getPage(n);
+  const base = pag.getViewport({scale:1});
+  const vp = pag.getViewport({scale: anchoCss * Math.min(devicePixelRatio||1, 2) / base.width});
+  const c = document.createElement("canvas"); c.width = vp.width; c.height = vp.height;
+  await pag.render({canvasContext:c.getContext("2d"), viewport:vp}).promise;
+  return c;
 }
-const vigia = new IntersectionObserver(es => es.forEach(e => {
-  if (e.isIntersecting) { vigia.unobserve(e.target); miniatura(e.target); }
-}), {rootMargin: "200px"});
+async function portada(el){
+  const src = el.dataset.src;
+  if (IMG.test(src)) { el.insertAdjacentHTML("afterbegin", `<img src="${src}" alt="" loading="lazy">`); el.querySelector(".ph")?.remove(); return; }
+  if (!/\.pdf$/i.test(src)) return;
+  try { const c = await dibujar(await abrirPdf(src), 1, el.clientWidth || 300); el.querySelector(".ph")?.remove(); el.prepend(c); } catch(e) {}
+}
+const vigia = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { vigia.unobserve(e.target); portada(e.target); } }), {rootMargin:"300px"});
 
+// ---------- Compartir ----------
+const linkGuia = g => `${location.origin}${location.pathname}?g=${encodeURIComponent(g.archivo)}`;
+const linkWa = g => "https://wa.me/?text=" + encodeURIComponent(`📚 Guía de ${g.asig} (${g.curso}): ${g.titulo}\n${linkGuia(g)}`);
+
+// ---------- Estado y pintado ----------
 let guias = [], curso = CURSOS[0], materia = null;
 try { const s = localStorage.getItem("curso"); if (CURSOS.includes(s)) curso = s; } catch(e){}
 
@@ -198,24 +284,67 @@ function pintarMaterias(){
       <div class="ico">${m.i}</div><b>${m.n}</b><span>${n} guía${n===1?"":"s"}</span></button>`;
   }).join("");
 }
+const vacio = `<div class="empty"><svg viewBox="0 0 120 80" aria-hidden="true"><path d="M20 22c13-5 26-5 40 3v44c-14-8-27-8-40-3z" fill="#fff" stroke="#9aa0aa" stroke-width="3" stroke-linejoin="round"/><path d="M100 22c-13-5-26-5-40 3v44c14-8 27-8 40-3z" fill="#fff" stroke="#9aa0aa" stroke-width="3" stroke-linejoin="round"/><path d="M88 8l3 7 7 .7-5.3 4.8 1.5 7-6.2-3.6-6.2 3.6 1.5-7-5.3-4.8 7-.7z" fill="#ffd54a"/></svg>Todavía no hay guías aquí. ¡Pronto se subirán!</div>`;
+
 function pintarLista(){
   const q = document.getElementById("q").value.trim().toLowerCase();
   document.getElementById("tituloLista").textContent = materia ? `Guías de ${materia}` : `Todas las guías de ${curso}`;
   const res = guias.filter(g => g.curso===curso && (!materia || g.asig===materia) && (g.titulo+" "+g.asig).toLowerCase().includes(q))
-                   .sort((a,b)=>b.fecha.localeCompare(a.fecha));
-  document.getElementById("list").innerHTML = res.length ? res.map(g => `
-    <div class="item" style="--c:var(${mat(g.asig).c})">
-      <a class="thumb" href="${esc(g.archivo)}" target="_blank" rel="noopener" data-src="${esc(g.archivo)}" aria-label="Ver ${esc(g.titulo)}">📄</a>
-      <div class="info"><div class="tag">${esc(g.asig)}</div><h3>${esc(g.titulo)}</h3><div class="date">${fmt(g.fecha)}</div></div>
-      <div class="acciones">
-        ${VISIBLE.test(g.archivo) ? `<a class="btn sec" href="${esc(g.archivo)}" target="_blank" rel="noopener" aria-label="Ver ${esc(g.titulo)}">${ojo}<span>Ver</span></a>` : ""}
-        <a class="btn" href="${esc(g.archivo)}" download aria-label="Descargar ${esc(g.titulo)}">${icon}<span>Descargar</span></a>
+                   .sort((a,b)=>b.fecha.localeCompare(a.fecha) || a.titulo.localeCompare(b.titulo));
+  document.getElementById("list").innerHTML = res.length ? res.map(g => {
+    const i = guias.indexOf(g), ver = VISIBLE.test(g.archivo);
+    return `<article class="tarjeta" style="--c:var(${mat(g.asig).c})">
+      <button class="portada" ${ver?`data-ver="${i}"`:"disabled"} data-src="${esc(g.archivo)}" aria-label="Ver ${esc(g.titulo)}">
+        <span class="cinta">${esc(g.asig)}</span><span class="ph">📄</span>
+        ${ver?`<span class="lupa">${I.ojo} Ver guía</span>`:""}
+      </button>
+      <div class="cuerpo">
+        <div><h3>${esc(g.titulo)}</h3>${g.fecha?`<div class="date">${fmt(g.fecha)}</div>`:""}</div>
+        <div class="acciones">
+          <a class="btn prim" href="${esc(g.archivo)}" download>${I.bajar}<span>Descargar</span></a>
+          ${ver?`<button class="btn sec" data-ver="${i}" aria-label="Ver ${esc(g.titulo)}">${I.ojo}</button>`:""}
+          <a class="btn wa" href="${linkWa(g)}" target="_blank" rel="noopener" aria-label="Compartir por WhatsApp">${I.wa}</a>
+        </div>
       </div>
-    </div>`).join("") : `<div class="empty">Todavía no hay guías aquí. ¡Pronto se subirán! 📚</div>`;
-  document.querySelectorAll(".thumb[data-src]").forEach(el => vigia.observe(el));
+    </article>`;
+  }).join("") : vacio;
+  document.querySelectorAll(".portada[data-src]").forEach(el => vigia.observe(el));
 }
 function pintar(){ pintarCursos(); pintarMaterias(); pintarLista(); }
 
+// ---------- Visor ----------
+const visor = document.getElementById("visor");
+let turnoVisor = 0;
+async function abrirVisor(g){
+  const t = ++turnoVisor;
+  document.getElementById("vbar").style.setProperty("--c", `var(${mat(g.asig).c})`);
+  document.getElementById("vTitulo").textContent = g.titulo;
+  document.getElementById("vSub").textContent = `${g.asig} · ${g.curso}${g.fecha ? " · " + fmt(g.fecha) : ""}`;
+  const d = document.getElementById("vDesc"); d.href = g.archivo; d.innerHTML = `${I.bajar}<span>Descargar</span>`;
+  const w = document.getElementById("vWa"); w.href = linkWa(g); w.innerHTML = I.wa;
+  const caja = document.getElementById("vPags");
+  caja.innerHTML = `<div class="vmsg">Cargando guía…</div>`; caja.scrollTop = 0;
+  if (!visor.open) visor.showModal();
+  if (IMG.test(g.archivo)) { caja.innerHTML = `<img src="${g.archivo}" alt="${esc(g.titulo)}">`; return; }
+  try {
+    const pdf = await abrirPdf(g.archivo);
+    const ancho = Math.min(caja.clientWidth - 32, 900);
+    for (let n = 1; n <= pdf.numPages; n++) {
+      const c = await dibujar(pdf, n, ancho);
+      if (t !== turnoVisor || !visor.open) return;
+      if (n === 1) caja.innerHTML = "";
+      caja.appendChild(c);
+    }
+  } catch(e) {
+    if (t === turnoVisor) caja.innerHTML = `<div class="vmsg">No se pudo mostrar la guía aquí. Usa el botón Descargar.</div>`;
+  }
+}
+function cerrarVisor(){ turnoVisor++; visor.close(); }
+document.getElementById("vCerrar").addEventListener("click", cerrarVisor);
+visor.addEventListener("click", e => { if (e.target === visor) cerrarVisor(); });
+visor.addEventListener("close", () => { turnoVisor++; document.getElementById("vPags").innerHTML = ""; });
+
+// ---------- Eventos ----------
 document.getElementById("cursos").addEventListener("click", e => {
   const b = e.target.closest(".curso"); if(!b) return;
   curso = b.dataset.c; materia = null;
@@ -228,9 +357,13 @@ document.getElementById("materias").addEventListener("click", e => {
   pintarMaterias(); pintarLista();
   document.getElementById("tituloLista").scrollIntoView({behavior:"smooth", block:"start"});
 });
+document.getElementById("list").addEventListener("click", e => {
+  const b = e.target.closest("[data-ver]"); if(!b) return;
+  abrirVisor(guias[+b.dataset.ver]);
+});
 document.getElementById("q").addEventListener("input", pintarLista);
 
-// --- Lectura de las guías reales desde las carpetas de GitHub ---
+// ---------- Lectura de las guías desde las carpetas de GitHub ----------
 // Carpetas: guias/<curso>/<asignatura>/<archivo>
 const CARPETA_CURSO = {"1-basico":"1° Básico","2-basico":"2° Básico","3-basico":"3° Básico","4-basico":"4° Básico"};
 const CARPETA_MATERIA = {"lenguaje":"Lenguaje","matematicas":"Matemáticas","ciencias":"Ciencias","historia":"Historia","ingles":"Inglés"};
@@ -262,7 +395,15 @@ async function cargarGuias(){
   throw new Error("sin acceso");
 }
 
-cargarGuias().then(d => { guias = d; pintar(); }).catch(() => {
+cargarGuias().then(d => {
+  guias = d;
+  // Link compartido: ?g=ruta → abre esa guía directo
+  const pedida = new URLSearchParams(location.search).get("g");
+  const g = pedida && guias.find(x => x.archivo === pedida);
+  if (g) { curso = g.curso; materia = g.asig; }
+  pintar();
+  if (g && VISIBLE.test(g.archivo)) abrirVisor(g);
+}).catch(() => {
   guias = []; pintar();
   document.getElementById("list").innerHTML = `<div class="empty">No pudimos cargar las guías. Intenta de nuevo en unos minutos.</div>`;
 });
